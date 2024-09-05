@@ -4,20 +4,24 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        mobile: { min: "100px", max: "360px" },
-        tablet: { min: "361px", max: "768px" },
-        laptop: { min: "769px", max: "1440px " },
-        pc: { min: "1441px" },
+        mobile: { min: "100px", max: "500px" },
+        tablet: { min: "501px", max: "991px" },
+        laptop: { min: "992px", max: "1400px " },
+        pc: { min: "1501px" },
       },
-
-      colors: {
-        "main-color": "#393d46",
-        "dark-grey": "#9f9f9f",
-        "medium-grey": "#cdcfd1",
-        "light-grey": "#dcdcdc",
-        "dark-white": "#ffffff",
-        "medium-white": "#f5f5f5",
-        "light-white": "#f6f7fb",
+      width: {
+        "5p": "5%",
+        "15p": "15%",
+        "50p": "50%",
+      },
+      fontFamily: {
+        nunito: ["nunito", "sans-serif"],
+      },
+      fontSize: {
+        17: "17px",
+      },
+      margin: {
+        110: "-110px",
       },
     },
   },
