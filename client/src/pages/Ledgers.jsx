@@ -11,7 +11,9 @@ import leager6 from "../assets/images/leager6.jpg";
 import { useNavigate } from "react-router-dom";
 
 const Ledgers = () => {
-  const legerApi = [
+  const images = [leager1, leager2, leager3, leager4, leager5, leager6];
+
+  const initialLedgerApi = [
     {
       id: "1",
       image: leager1,
@@ -20,66 +22,20 @@ const Ledgers = () => {
         "A comprehensive ledger designed to help you track and manage your personal finances. This includes recording your income, categorizing your expenses, and setting monthly or yearly budgets. By maintaining this ledger, you can gain insights into your spending habits, make informed decisions about saving and investing, and achieve better control over your financial health.",
       createdAt: "1st September, 2024",
     },
-    {
-      id: "2",
-      image: leager2,
-      name: "Business Expenses",
-      description:
-        "An organized ledger specifically for managing and recording all expenses related to your business operations. This ledger helps in tracking operational costs, categorizing different types of expenses, and maintaining accurate records for financial analysis and tax reporting. By using this ledger, you can monitor business expenses efficiently and ensure compliance with financial regulations.",
-      createdAt: "15th August, 2024",
-    },
-    {
-      id: "3",
-      image: leager3,
-      name: "Savings Goals",
-      description:
-        "A targeted ledger focused on tracking progress towards various savings goals. Whether you’re saving for a vacation, a new gadget, or an emergency fund, this ledger helps you set specific savings targets, track your contributions over time, and visualize your progress. This ledger is essential for staying motivated and organized as you work towards achieving your financial goals.",
-      createdAt: "20th July, 2024",
-    },
-    {
-      id: "4",
-      image: leager4,
-      name: "Vacation Fund",
-      description:
-        "A specialized ledger for planning and tracking savings towards your next vacation. This ledger helps you set a budget for your trip, record contributions towards your vacation fund, and monitor your progress to ensure you have enough saved up by your departure date.",
-      createdAt: "10th June, 2024",
-    },
-    {
-      id: "5",
-      image: leager5,
-      name: "Emergency Savings",
-      description:
-        "A crucial ledger for building and maintaining an emergency fund. This ledger assists in tracking your savings contributions, setting targets for your emergency fund, and ensuring that you have sufficient reserves for unexpected expenses or financial emergencies.",
-      createdAt: "25th May, 2024",
-    },
-    {
-      id: "6",
-      image: leager6,
-      name: "Home Renovation",
-      description:
-        "A dedicated ledger for managing and tracking expenses related to home renovation projects. This ledger helps you budget for renovation costs, record expenditures, and ensure that you stay within your planned budget while achieving your home improvement goals.",
-      createdAt: "12th April, 2024",
-    },
-    {
-      id: "7",
-      image: leager1,
-      name: "Educational Expenses",
-      description:
-        "An important ledger for tracking educational expenses, whether for tuition, books, or other academic costs. This ledger helps you manage and record educational spending, set savings goals, and keep track of your budget throughout your educational journey.",
-      createdAt: "30th March, 2024",
-    },
   ];
 
   const navigate = useNavigate();
-  const [ledgers, setLedgers] = useState([]);
+  const [ledgers, setLedgers] = useState(initialLedgerApi);
   const [search, setSearch] = useState("");
   const [filteredLedgers, setFilteredLedgers] = useState([]);
   const [selectedSortOption, setSelectedSortOption] = useState("Recommended");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [newLedger, setNewLedger] = useState({ name: "", description: "" });
 
   useEffect(() => {
-    setLedgers(legerApi);
-  }, []);
+    setFilteredLedgers(ledgers);
+  }, [ledgers]);
 
   useEffect(() => {
     let results = ledgers.filter((ledger) =>
@@ -111,6 +67,29 @@ const Ledgers = () => {
     return content.length > maxLength
       ? content.slice(0, maxLength) + "..."
       : content;
+  };
+
+  const handleNewLedgerSubmit = () => {
+    const newLedgerData = {
+      id: Date.now().toString(),
+      image: images[Math.floor(Math.random() * images.length)],
+      name: newLedger.name,
+      description: newLedger.description,
+      createdAt: new Date().toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+    };
+
+    setLedgers([...ledgers, newLedgerData]);
+    setShowForm(false);
+    setNewLedger({ name: "", description: "" });
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setNewLedger({ name: "", description: "" });
   };
 
   const handlego = () => {
@@ -166,12 +145,54 @@ const Ledgers = () => {
             )}
           </div>
         </div>
+
         <div className="mx-auto w-4/5 flex flex-wrap gap-11 py-10 laptop:w-11/12 tablet:w-11/12 tablet:mt-96 tablet:pt-30 mobile:py-0">
-          <div className="flex items-center justify-center max-w-xs mx-auto w-80 overflow-hidden bg-white rounded-lg shadow-xl mobile:mb-5 cursor-pointer">
+          <div
+            className="flex items-center justify-center max-w-xs mx-auto w-80 overflow-hidden bg-white rounded-lg shadow-xl mobile:mb-5 cursor-pointer"
+            onClick={() => setShowForm(!showForm)}
+          >
             <span className="border-2 border-black bg-white text-black text-6xl rounded-full opacity-70 mobile:right-4 p-4">
               <FaPlus />
             </span>
           </div>
+
+          {showForm && (
+            <div className="flex flex-col gap-4 w-full max-w-xs mx-auto p-4 bg-white rounded-lg shadow-lg">
+              <input
+                type="text"
+                placeholder="Ledger Name"
+                value={newLedger.name}
+                onChange={(e) =>
+                  setNewLedger({ ...newLedger, name: e.target.value })
+                }
+                className="p-2 border border-gray-400 rounded-md"
+              />
+              <textarea
+                placeholder="Ledger Description"
+                value={newLedger.description}
+                onChange={(e) =>
+                  setNewLedger({
+                    ...newLedger,
+                    description: e.target.value,
+                  })
+                }
+                className="p-2 border border-gray-400 rounded-md"
+              />
+              <button
+                onClick={handleNewLedgerSubmit}
+                className="bg-blue-500 text-white p-2 rounded-md"
+              >
+                Add Ledger
+              </button>
+              <button
+                onClick={handleCancel}
+                className="bg-red-500 text-white p-2 rounded-md"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
           {filteredLedgers.map((curElem) => (
             <div
               key={curElem.id}
@@ -190,9 +211,9 @@ const Ledgers = () => {
                 <p className="mt-3 text-sm text-gray-600">
                   {descTrim(curElem.description)}
                 </p>
-                <h1 className="text-lg font-bold py-2 mt-3 text-gray-800">
+                <div className="text-lg font-bold py-2 mt-3 text-gray-800">
                   {curElem.createdAt}
-                </h1>
+                </div>
               </div>
             </div>
           ))}
